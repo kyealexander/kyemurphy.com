@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kye Murphy</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:ital,wght@0,200..900;1,200..900&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fira+Code&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <style>
+      #particles-js {
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        top: 0;
+        left: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Particle background container -->
+    <div id="particles-js"></div>
+
+    <main class="landing">
+      <div
+        class="card"
+        data-tilt
+        data-tilt-full-page-listening
+        data-tilt-reverse="true"
+      >
+        <h1 style="transform: translateZ(20px)">/KyeMurphy</h1>
+        <p class="tagline" style="transform: translateZ(15px)">
+          ~/<span class="glitch-symbol" data-text="Hacker">Hacker</span> | ~/Dev
+          | ~/Veteran
+        </p>
+
+        <nav class="quick-links" style="transform: translateZ(10px)">
+          <a href="about.html">About</a>
+          <a href="projects.html">Projects</a>
+          <a href="contact.html">Contact</a>
+          <a href="cv.pdf" target="_blank">CV</a>
+        </nav>
+        <p class="notice">~/.status: under_construction</p>
+      </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script>
+      particlesJS.load("particles-js", "particlesjs-config.json", function () {
+        console.log("particles.js loaded");
+      });
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/vanilla-tilt@1.7.2/dist/vanilla-tilt.min.js"></script>
+
+    <script>
+      const glitchEl = document.querySelector(".glitch-symbol");
+      const originalText = glitchEl.dataset.text;
+      const glitchChars = "01<>+-=~!@#$%^&*";
+
+      function glitchText(element, duration = 1000, interval = 80) {
+        let elapsed = 0;
+        const glitchInterval = setInterval(() => {
+          let glitched = "";
+          for (let i = 0; i < originalText.length; i++) {
+            if (Math.random() > 0.5) {
+              glitched +=
+                glitchChars[Math.floor(Math.random() * glitchChars.length)];
+            } else {
+              glitched += originalText[i];
+            }
+          }
+          element.textContent = glitched;
+          elapsed += interval;
+
+          if (elapsed >= duration) {
+            clearInterval(glitchInterval);
+            element.textContent = originalText;
+          }
+        }, interval);
+      }
+
+      // Trigger randomly every few seconds
+      setInterval(() => {
+        glitchText(glitchEl);
+      }, 3000);
+    </script>
+  </body>
+</html>
+
