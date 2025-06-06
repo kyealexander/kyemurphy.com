@@ -1,0 +1,118 @@
+:root {
+  --font: "Source Code Pro", "Fira Code", monospace;
+
+  --text: #eff6ed;
+  --bg: #060c05;
+  --primary: #abdba3;
+  --secondary: #367c2a;
+  --accent: #5cca4b;
+
+  --text-rgb: 239, 246, 237;
+  --bg-rgb: 6, 12, 5;
+  --primary-rgb: 171, 219, 163;
+  --secondary-rgb: 54, 124, 42;
+  --accent-rgb: 92, 202, 75;
+
+  --mist-font-size: 18px;
+  --mist-color-rgb: 92, 202, 75; /* corresponds to #5cca4b */
+  --mist-fade-speed: 0.003;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  text-align: center;
+}
+
+h1 {
+  font-size: 3rem;
+  color: var(--text);
+  margin-bottom: 0.5rem;
+  font-weight: 900;
+}
+
+.tagline {
+  font-size: 1rem;
+  color: var(--primary);
+  letter-spacing: 0.5px;
+  margin-bottom: 1rem;
+  font-weight: 300;
+}
+
+.error-message {
+  margin-bottom: 1rem;
+}
+
+.quick-links {
+  display: flex;
+  gap: 1.5rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.quick-links a {
+  color: var(--primary);
+  text-decoration: none;
+  font-weight: 600;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.quick-links a:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.card {
+  background-color: rgba(var(--accent-rgb), 0.025);
+  padding: 3rem 5rem;
+  border-radius: 5px;
+  backdrop-filter: blur(1px);
+  transition: all ease;
+  /*border: 2px solid rgba(var(--primary-rgb), 0.1);*/
+}
+
+.notice {
+  font-size: 0.85rem;
+  color: var(--text);
+  background-color: rgba(var(--bg-rgb), 0.1);
+  border: 1px solid var(--primary);
+  padding: 0.25rem 0.75rem;
+  border-radius: 5px;
+  display: inline-block;
+  margin-top: 1rem;
+  font-family: var(--font);
+}
+
+::selection {
+  background: var(--secondary);
+  color: var(--text);
+}
+
+@media (max-width: 600px) {
+  .card {
+    padding: 2rem;
+    width: 90vw;
+    font-size: 90%;
+  }
+
+  h1 {
+    font-size: 2rem;
+  }
+
+  .tagline {
+    font-size: 0.9rem;
+  }
+
+}
