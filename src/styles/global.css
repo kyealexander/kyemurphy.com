@@ -1,0 +1,14 @@
+@import "tailwindcss";
+@import "./fonts.css";
+
+html {
+  background-color: #0b0b0f; 
+}
+
+body {
+  font-family: 'GeistMono', monospace;
+}
+
+.hover-effect {
+  @apply transition transform hover:scale-[1.02] hover:shadow-lg hover:bg-zinc-700;
+}
