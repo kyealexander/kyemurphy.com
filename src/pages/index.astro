@@ -6,10 +6,10 @@ import BaseLayout from "../layouts/BaseLayout.astro";
   <section class="flex flex-col items-center text-center w-full">
 
     <!-- Hero -->
-    <div class="flex flex-col items-center justify-center p-8 space-y-6 w-full max-w-4xl">
+    <div class="flex flex-col items-center justify-center p-8 space-y-6 w-full max-w-4xl scale-[1.5]">
       <div class="text-center">
         <h1 class="text-zinc-200 text-4xl font-bold font-geist">Hi, I'm Kye</h1>
-        <h2 class="text-zinc-400 text-sm mt-2 hover:text-lime-300">Cyber Security Student & Developer</h2>
+        <h2 class="text-zinc-400 text-sm mt-2 hover:text-lime-300">Cyber Security Student</h2>
       </div>
 
       <!-- About -->
@@ -25,25 +25,26 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         </p>
       </section>
 
-    <p class="text-sm text-zinc-400 hover:text-lime-300 transition">
-      <a href="mailto:kye@kyemurphy.com">kye@kyemurphy.com</a>
-    </p>
+      <p class="text-sm text-zinc-400 hover:text-lime-300 transition">
+        <a href="mailto:kye@kyemurphy.com">kye@kyemurphy.com</a>
+      </p>
 
-    <!-- Socials -->
-    <div class="flex gap-10 text-2xl text-zinc-400">
-      <a href="https://github.com/kyealexander" class="hover:text-lime-300 transition"></a>
-      <a href="https://www.linkedin.com/in/kyemurphy/" class="hover:text-lime-300 transition"></a>
-      <a href="https://x.com/kyealexmurphy" class="hover:text-lime-300 transition"></a>
-    </div>
+      <!-- Socials -->
+      <div class="flex gap-10 text-2xl text-zinc-400">
+        <a href="https://github.com/kyealexander" class="hover:text-lime-300 transition"></a>
+        <a href="https://www.linkedin.com/in/kyemurphy/" class="hover:text-lime-300 transition"></a>
+        <a href="https://x.com/kyealexmurphy" class="hover:text-lime-300 transition"></a>
+      </div>
 
-    <!-- Footer -->
-    <footer class="text-xs text-zinc-600 text-center leading-relaxed">
-    <div class="opacity-80">© {new Date().getFullYear()} Kye Murphy</div>
-    <div class="opacity-80">
-      Built with 
-      <a href="https://astro.build" target="_blank" class="underline hover:text-zinc-200">Astro</a> & 
-      <a href="https://tailwindcss.com" target="_blank" class="underline hover:text-zinc-200">Tailwind CSS</a>
+      <!-- Footer -->
+      <footer class="text-xs text-zinc-600 text-center leading-relaxed">
+      <div class="opacity-80">© {new Date().getFullYear()} Kye Murphy</div>
+      <div class="opacity-80">
+        Built with 
+        <a href="https://astro.build" target="_blank" class="underline hover:text-zinc-200">Astro</a> & 
+        <a href="https://tailwindcss.com" target="_blank" class="underline hover:text-zinc-200">Tailwind CSS</a>
+      </div>
+      </footer>
     </div>
-    </footer>
   </section>
 </BaseLayout>

@@ -2,13 +2,26 @@
 @import "./fonts.css";
 
 html {
-  background-color: #0b0b0f; 
+  background-color: var(--color-zinc-950); 
 }
 
 body {
   font-family: 'GeistMono', monospace;
+  overflow: hidden;
 }
 
-.hover-effect {
-  @apply transition transform hover:scale-[1.02] hover:shadow-lg hover:bg-zinc-700;
+::selection {
+  background-color: var(--color-lime-200);
+  color: var(--color-zinc-950);
+}
+
+.blob {
+  opacity: 0.1;
+  transform: scale(0.5);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.blob-loaded {
+  opacity: 1;
+  transform: scale(1);
 }
