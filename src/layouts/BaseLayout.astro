@@ -1,6 +1,7 @@
 ---
 import "../styles/global.css";
 import GridOverlay from "../components/GridOverlay.astro";
+import GridTracer from "../components/GridTracer.astro";
 ---
 <html lang="en">
   <head>
@@ -11,12 +12,9 @@ import GridOverlay from "../components/GridOverlay.astro";
   </head>
   <body class=" text-white font-sans">
     <main class="min-h-screen flex flex-col items-center justify-center p-6">
-      <div class="blob bg-indigo-500/10 blur-[120px] rounded-full pointer-events-none z-0"></div>
-      <div class="blob bg-purple-500/10 blur-[120px] rounded-full pointer-events-none z-0"></div>
-      <div class="blob bg-pink-500/10 blur-[120px] rounded-full pointer-events-none z-0"></div>
-      <GridOverlay />
+      <GridTracer /> 
+      <!-- <GridOverlay /> -->
       <slot />
     </main>
-    <!-- <script type="module" src="/js/blobs.js"></script> -->
   </body>
 </html>

@@ -1,0 +1,241 @@
+---
+/* GridTracer.astro */
+---
+
+<style>
+  .gridtracer {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .gridtracer { display: none; }
+  }
+</style>
+
+<canvas class="gridtracer" id="gridtracer"></canvas>
+
+<script client:load>
+  // ==========================
+  // TUNABLES
+  // ==========================
+  const CONFIG = {
+    GRID_GAP: 96,                 // px between grid lines
+    GRID_COLOR: 'rgba(255,255,255,0.04)',
+    TRAIL_COLOR: 'rgba(163,230,53,0.32)',
+    TRAIL_WIDTH: 4,               // px
+    TRAIL_LEN: 256,               // px visible head "comet"
+    SPAWN_MIN_MS: 128,            // min spawn interval
+    SPAWN_MAX_MS: 1024,           // max spawn interval
+    SPEED_MIN: 512,               // px/s
+    SPEED_MAX: 512,               // px/s
+    MAX_TRAILS: 8
+  };
+
+  // ==========================
+  // STATE
+  // ==========================
+  const canvas = document.getElementById('gridtracer');
+  const ctx = canvas.getContext('2d', { alpha: true });
+
+  let dpr = Math.max(1, window.devicePixelRatio || 1);
+  let W = 0, H = 0, cols = 0, rows = 0;
+
+  /** @type {Array<{vertical:boolean,x:number,y:number,dir:1|-1,speed:number,width:number,dead:boolean}>} */
+  let trails = [];
+
+  let gridDirty = true;
+  let gridBitmap = null;
+  let rafId = 0;
+  let lastTs = performance.now();
+  let stop = false;
+
+  // Respect reduced motion
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    stop = true; // canvas hidden via CSS already
+  }
+
+  // ==========================
+  // UTILITIES
+  // ==========================
+  const rand = (min, max) => Math.random() * (max - min) + min;
+  const choiceIdx = n => Math.floor(Math.random() * n);
+
+  // ==========================
+  // CANVAS / GRID
+  // ==========================
+  function resizeCanvas() {
+    const { innerWidth: w, innerHeight: h } = window;
+    dpr = Math.max(1, window.devicePixelRatio || 1);
+
+    canvas.width  = Math.floor(w * dpr);
+    canvas.height = Math.floor(h * dpr);
+    canvas.style.width  = w + 'px';
+    canvas.style.height = h + 'px';
+
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+    W = w; H = h;
+    cols = Math.floor(W / CONFIG.GRID_GAP);
+    rows = Math.floor(H / CONFIG.GRID_GAP);
+
+    gridDirty = true;
+  }
+
+  function drawGridBitmap() {
+    const off = document.createElement('canvas');
+    off.width = Math.floor(W * dpr);
+    off.height = Math.floor(H * dpr);
+
+    const octx = off.getContext('2d');
+    octx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+    octx.clearRect(0, 0, W, H);
+    octx.strokeStyle = CONFIG.GRID_COLOR;
+    octx.lineWidth = 1;
+
+    octx.beginPath();
+    for (let c = 0; c <= cols; c++) {
+      const x = Math.round(c * CONFIG.GRID_GAP) + 0.5;
+      octx.moveTo(x, 0); octx.lineTo(x, H);
+    }
+    for (let r = 0; r <= rows; r++) {
+      const y = Math.round(r * CONFIG.GRID_GAP) + 0.5;
+      octx.moveTo(0, y); octx.lineTo(W, y);
+    }
+    octx.stroke();
+
+    gridBitmap = off; // simple, fast drawImage blit
+  }
+
+  // ==========================
+  // SPAWNING
+  // ==========================
+  function scheduleSpawn() {
+    if (stop) return;
+    const delay = rand(CONFIG.SPAWN_MIN_MS, CONFIG.SPAWN_MAX_MS);
+    window.setTimeout(() => !stop && spawnTrail(), delay);
+  }
+
+  function spawnTrail() {
+    if (trails.length >= CONFIG.MAX_TRAILS) return scheduleSpawn();
+
+    const vertical = Math.random() < 0.5;
+    const speed = rand(CONFIG.SPEED_MIN, CONFIG.SPEED_MAX);
+
+    if (vertical) {
+      const column = choiceIdx(cols + 1);
+      const x = Math.round(column * CONFIG.GRID_GAP) + 0.5;
+      const dir = Math.random() < 0.5 ? 1 : -1; // 1 = down, -1 = up
+      const yStart = dir > 0 ? 0 : H;
+
+      trails.push({ vertical: true, x, y: yStart, dir, speed, width: CONFIG.TRAIL_WIDTH, dead: false });
+    } else {
+      const row = choiceIdx(rows + 1);
+      const y = Math.round(row * CONFIG.GRID_GAP) + 0.5;
+      const dir = Math.random() < 0.5 ? 1 : -1; // 1 = right, -1 = left
+      const xStart = dir > 0 ? 0 : W;
+
+      trails.push({ vertical: false, x: xStart, y, dir, speed, width: CONFIG.TRAIL_WIDTH, dead: false });
+    }
+
+    scheduleSpawn();
+  }
+
+  // ==========================
+  // RENDERING
+  // ==========================
+  function drawTrails(dt) {
+    const L = CONFIG.TRAIL_LEN;
+
+    for (const t of trails) {
+      ctx.lineWidth = t.width;
+
+      if (t.vertical) {
+        const newY = t.y + t.dir * t.speed * dt;
+        const head = newY;
+        const tail = newY - t.dir * L;
+
+        // Gradient tail -> head ensures bright head leads movement
+        const g = ctx.createLinearGradient(0, tail, 0, head);
+        g.addColorStop(0, 'rgba(147,255,122,0)');
+        g.addColorStop(1, CONFIG.TRAIL_COLOR);
+
+        ctx.strokeStyle = g;
+        ctx.beginPath();
+        ctx.moveTo(t.x, tail);
+        ctx.lineTo(t.x, head);
+        ctx.stroke();
+
+        t.y = newY;
+        if ((t.dir > 0 && t.y - L > H) || (t.dir < 0 && t.y + L < 0)) t.dead = true;
+      } else {
+        const newX = t.x + t.dir * t.speed * dt;
+        const head = newX;
+        const tail = newX - t.dir * L;
+
+        const g = ctx.createLinearGradient(tail, 0, head, 0);
+        g.addColorStop(0, 'rgba(147,255,122,0)');
+        g.addColorStop(1, CONFIG.TRAIL_COLOR);
+
+        ctx.strokeStyle = g;
+        ctx.beginPath();
+        ctx.moveTo(tail, t.y);
+        ctx.lineTo(head, t.y);
+        ctx.stroke();
+
+        t.x = newX;
+        if ((t.dir > 0 && t.x - L > W) || (t.dir < 0 && t.x + L < 0)) t.dead = true;
+      }
+    }
+
+    trails = trails.filter(t => !t.dead);
+  }
+
+  function frame(ts) {
+    if (stop) return;
+
+    const dt = Math.min(0.05, (ts - lastTs) / 1000); // clamp for stability
+    lastTs = ts;
+
+    if (gridDirty || !gridBitmap) {
+      drawGridBitmap();
+      gridDirty = false;
+    }
+
+    ctx.clearRect(0, 0, W, H);
+    ctx.drawImage(gridBitmap, 0, 0, W, H); // cheap blit
+    drawTrails(dt);
+
+    rafId = requestAnimationFrame(frame);
+  }
+
+  // ==========================
+  // LIFECYCLE
+  // ==========================
+  function init() {
+    resizeCanvas();
+    if (!stop) {
+      scheduleSpawn();
+      lastTs = performance.now();
+      rafId = requestAnimationFrame(frame);
+    }
+  }
+
+  function onResize() {
+    resizeCanvas();
+    gridDirty = true; // keep trails, rebuild grid
+  }
+
+  function cleanup() {
+    stop = true;
+    cancelAnimationFrame(rafId);
+  }
+
+  // Init + events
+  init();
+  window.addEventListener('resize', onResize);
+  window.addEventListener('astro:before-swap', cleanup);
+</script>
