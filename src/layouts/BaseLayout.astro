@@ -1,8 +1,12 @@
 ---
+import { Astro } from 'astro/runtime';
+const isHome = Astro.url.pathname === "/";
+
 import "../styles/global.css";
-import GridOverlay from "../components/GridOverlay.astro";
+import Header from "../components/Header.astro";
 import GridTracer from "../components/GridTracer.astro";
 ---
+
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -10,9 +14,20 @@ import GridTracer from "../components/GridTracer.astro";
     <link rel="icon" href="/favicon.ico" type="image/x-icon" />
     <title>Kye Murphy</title>
   </head>
-  <body class=" text-white font-sans">
-    <main class="min-h-screen flex flex-col items-center justify-center p-6">
-      <GridTracer /> 
+  <body class="text-white font-sans">
+    <GridTracer />
+    <Header />
+    {!isHome && (
+    <a
+      href="/"
+      class="fixed top-6 left-6 z-60 text-l text-zinc-300 bg-zinc-900/40 border border-zinc-700/40 
+            px-8 py-2 rounded-full backdrop-blur-md hover:text-lime-300 hover:border-lime-400 
+            transition shadow-md ">
+      ← Home
+    </a>
+    )}
+
+    <main class="relative min-h-screen flex flex-col items-center justify-center p-6 pt-24 md:pt-28">
       <slot />
     </main>
   </body>
