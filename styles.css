@@ -1,0 +1,96 @@
+:root {
+    --bg-color: #0a0a0c;        /* Main backgroun */
+    --text-main: #a1a1aa;       /* General text color */
+    --title-color: #e4e4e7;     /* Main heading color */
+    --prompt-color: #f43f5e;    /* Color for the terminal prompt */
+    --cursor-color: #f43f5e;    /* Color for the blinking cursor */
+    --link-color: #52525b;      /* Default link color */
+    --link-hover: #e4e4e7;      /* Link color on hover */
+    --accent-color: #f43f5e;    /* Color for the hover arrow (>>) */
+}
+
+/* Reset defaults */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--bg-color); 
+    color: var(--text-main);
+    font-family: "JetBrains Mono", "Fira Code", Consolas, monospace;
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.container {
+    padding: 2rem;
+    max-width: 650px;
+    width: 100%;
+}
+
+.prompt {
+    color: var(--prompt-color); 
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+}
+
+h1 {
+    font-size: 3.5rem;
+    font-weight: 700;
+    color: var(--title-color);
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.05em;
+}
+
+h2 {
+    font-size: 1.1rem;
+    font-weight: 400;
+    color: var(--cursor-color); 
+    margin-bottom: 3.5rem;
+    border-right: 2px solid var(--cursor-color);
+    display: inline-block;
+    padding-right: 5px;
+    animation: blink 1s step-end infinite;
+}
+
+@keyframes blink {
+    50% { border-color: transparent; }
+}
+
+.links {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+}
+
+.links a {
+    text-decoration: none;
+    color: var(--link-color);
+    font-size: 1.1rem;
+    position: relative;
+    width: fit-content;
+    transition: color 0.2s ease;
+}
+
+.links a::before {
+    content: ">> ";
+    color: var(--accent-color); 
+    opacity: 0;
+    transition: opacity 0.2s, transform 0.2s;
+    transform: translateX(-10px);
+    display: inline-block;
+}
+
+.links a:hover {
+    color: var(--link-hover);
+}
+
+.links a:hover::before {
+    opacity: 1;
+    transform: translateX(0);
+}
