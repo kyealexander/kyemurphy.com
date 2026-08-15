@@ -2,11 +2,9 @@
     --bg-color: #0a0a0c;
     --text-main: #a1a1aa;
     --title-color: #e4e4e7;
-    --prompt-color: #f43f5e;
-    --cursor-color: #f43f5e;
+    --accent-color: #f43f5e;
     --link-color: #52525b;
     --link-hover: #e4e4e7;
-    --accent-color: #f43f5e;
 }
 
 /* Reset defaults */
@@ -36,7 +34,7 @@ body {
 }
 
 .prompt {
-    color: var(--prompt-color);
+    color: var(--accent-color);
     font-size: 1.1rem;
     margin-bottom: 0.5rem;
 }
@@ -53,11 +51,11 @@ h1 {
 h2 {
     font-size: 1.1rem;
     font-weight: 400;
-    color: var(--cursor-color);
+    color: var(--accent-color);
 
     margin-bottom: 3.5rem;
 
-    border-right: 2px solid var(--cursor-color);
+    border-right: 2px solid var(--accent-color);
 
     display: inline-block;
     padding-right: 5px;
@@ -112,4 +110,26 @@ h2 {
 .links a:hover::before {
     opacity: 1;
     transform: translateX(0);
+}
+
+.theme-switcher {
+    position: fixed;
+    right: 5rem;
+    bottom: 5rem;
+
+    background: none;
+    border: none;
+
+    color: var(--link-color);
+
+    font-family: inherit;
+    font-size: 0.85rem;
+
+    cursor: pointer;
+
+    transition: color 0.2s ease;
+}
+
+.theme-switcher:hover {
+    color: var(--accent-color);
 }

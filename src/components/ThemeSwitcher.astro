@@ -1,0 +1,45 @@
+<button class="theme-switcher" id="theme-switcher" type="button">
+  [ theme: red ]
+</button>
+
+<script>
+  const themes = [
+    { name: "red", color: "#ff3864" },
+    { name: "green", color: "#41ff9a" },
+    { name: "blue", color: "#38bdf8" },
+    { name: "violet", color: "#c084fc" },
+    { name: "amber", color: "#ffbd2e" },
+  ];
+
+  const root = document.documentElement;
+  const button = document.querySelector("#theme-switcher");
+
+  const savedTheme = localStorage.getItem("theme") ?? "red";
+
+  let currentIndex = themes.findIndex(
+    (theme) => theme.name === savedTheme
+  );
+
+  if (currentIndex === -1) {
+    currentIndex = 0;
+  }
+
+  function applyTheme() {
+    const theme = themes[currentIndex];
+
+    root.style.setProperty("--accent-color", theme.color);
+
+    if (button) {
+      button.textContent = `[ theme: ${theme.name} ]`;
+    }
+
+    localStorage.setItem("theme", theme.name);
+  }
+
+  applyTheme();
+
+  button?.addEventListener("click", () => {
+    currentIndex = (currentIndex + 1) % themes.length;
+    applyTheme();
+  });
+</script>
