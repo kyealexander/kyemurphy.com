@@ -1,14 +1,18 @@
-<button class="theme-switcher" id="theme-switcher" type="button">
-  [ theme: red ]
+<button
+  class="theme-switcher"
+  id="theme-switcher"
+  type="button"
+>
+  [ theme: sakura ]
 </button>
 
 <script>
   const themes = [
-    { name: "red", color: "#ff3864" },
-    { name: "green", color: "#41ff9a" },
-    { name: "blue", color: "#38bdf8" },
+    { name: "sakura", color: "#ff3864" },
+    { name: "arcade", color: "#41ff9a" },
+    { name: "electric", color: "#38bdf8" },
     { name: "violet", color: "#c084fc" },
-    { name: "amber", color: "#ffbd2e" },
+    { name: "lantern", color: "#ffbd2e" },
   ];
 
   const root = document.documentElement;
@@ -36,10 +40,27 @@
     localStorage.setItem("theme", theme.name);
   }
 
-  applyTheme();
-
-  button?.addEventListener("click", () => {
+  function cycleTheme() {
     currentIndex = (currentIndex + 1) % themes.length;
     applyTheme();
+  }
+
+  applyTheme();
+
+  button?.addEventListener("click", cycleTheme);
+
+  document.addEventListener("keydown", (event) => {
+    const target = event.target;
+
+    if (
+      target instanceof HTMLInputElement ||
+      target instanceof HTMLTextAreaElement
+    ) {
+      return;
+    }
+
+    if (event.key.toLowerCase() === "t") {
+      cycleTheme();
+    }
   });
 </script>
