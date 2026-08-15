@@ -1,0 +1,51 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import ThemeSwitcher from "../components/ThemeSwitcher.astro";
+---
+
+<BaseLayout
+  title="404 | Kye Murphy"
+  description="Page not found"
+>
+  <main class="container">
+    <section class="error-page">
+      <p class="prompt">
+        ~ $ cd <span id="bad-path">/unknown</span>
+      </p>
+
+      <h1>404</h1>
+
+      <p class="error-message">
+        <span>bash: cd: </span><span id="bad-path-message">/unknown</span><span>: No such file or directory</span>
+      </p>
+
+      <p class="error-detail">
+        resource not found
+      </p>
+
+      <a class="error-link" href="/">
+        return home
+      </a>
+    </section>
+  </main>
+
+  <ThemeSwitcher />
+
+  <script>
+    const path = window.location.pathname;
+
+    const pathElement =
+      document.querySelector("#bad-path");
+
+    const messageElement =
+      document.querySelector("#bad-path-message");
+
+    if (pathElement) {
+      pathElement.textContent = path;
+    }
+
+    if (messageElement) {
+      messageElement.textContent = path;
+    }
+  </script>
+</BaseLayout>
