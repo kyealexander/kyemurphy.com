@@ -1,5 +1,6 @@
 ---
 import "../styles/global.css";
+import BackgroundWave from '../components/backgrounds/BackgroundWave.astro';
 
 const {
   title = "Kye Murphy",
@@ -22,6 +23,8 @@ const base = import.meta.env.BASE_URL;
 
   <body>
     <slot />
+
+    <BackgroundWave />
   </body>
 
 </html>

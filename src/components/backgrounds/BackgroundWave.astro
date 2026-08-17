@@ -1,0 +1,82 @@
+<canvas id="ew-canvas"></canvas>
+
+<style>
+  #ew-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1;
+    pointer-events: none;
+    opacity: 0.25; 
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const canvas = document.getElementById('ew-canvas') as HTMLCanvasElement;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
+
+    let width: number;
+    let height: number;
+    let time = 0;
+
+    function resize() {
+      width = window.innerWidth;
+      height = window.innerHeight;
+      canvas.width = width;
+      canvas.height = height;
+    }
+
+    window.addEventListener('resize', resize);
+    resize();
+
+    function draw() {
+      ctx.clearRect(0, 0, width, height);
+
+      const rootStyles = getComputedStyle(document.documentElement);
+      const accentColor = rootStyles.getPropertyValue('--accent-color').trim() || '#00ff00';
+
+      const centerY = height / 2;
+
+      ctx.beginPath();
+      ctx.lineWidth = 1.5;
+      ctx.strokeStyle = accentColor;
+      
+      ctx.shadowBlur = 8;
+      ctx.shadowColor = accentColor;
+
+      for (let x = 0; x < width; x++) {
+        const centerDist = Math.abs(x - width / 2);
+        const taper = Math.max(0, 1 - centerDist / (width / 3)); 
+
+        const frequency = 0.015;
+        const amplitude = 80 * taper; 
+        
+        const carrierWave = Math.sin(x * frequency + time) * amplitude;
+        const modWave = Math.cos(x * frequency * 3 - time * 1.5) * (amplitude * 0.2);
+        const signalNoise = (Math.random() - 0.5) * 4 * taper; 
+        
+        const y = centerY + carrierWave + modWave + signalNoise;
+
+        if (x === 0) {
+          ctx.moveTo(x, y);
+        } else {
+          ctx.lineTo(x, y);
+        }
+      }
+
+      ctx.stroke();
+
+      ctx.shadowBlur = 0;
+      time += 0.04; 
+
+      requestAnimationFrame(draw);
+    }
+
+    draw();
+  });
+</script>
