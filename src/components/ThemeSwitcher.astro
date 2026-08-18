@@ -18,7 +18,7 @@
   const root = document.documentElement;
   const button = document.querySelector("#theme-switcher");
 
-  const savedTheme = localStorage.getItem("theme") ?? "red";
+  const savedTheme = localStorage.getItem("theme") ?? "sakura";
 
   let currentIndex = themes.findIndex(
     (theme) => theme.name === savedTheme
@@ -38,6 +38,7 @@
     }
 
     localStorage.setItem("theme", theme.name);
+    document.dispatchEvent(new CustomEvent("themechange", { detail: theme.color }));
   }
 
   function cycleTheme() {

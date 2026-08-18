@@ -1,5 +1,4 @@
 <canvas id="ew-canvas"></canvas>
-
 <style>
   #ew-canvas {
     position: fixed;
@@ -9,74 +8,113 @@
     height: 100vh;
     z-index: -1;
     pointer-events: none;
-    opacity: 0.25; 
+    opacity: 0.28;
+    filter: drop-shadow(0 0 4px var(--accent-color, #00ff00));
   }
 </style>
-
 <script>
-  document.addEventListener('DOMContentLoaded', () => {
-    const canvas = document.getElementById('ew-canvas') as HTMLCanvasElement;
-    if (!canvas) return;
+  const canvas = document.getElementById('ew-canvas') as HTMLCanvasElement;
 
+  if (canvas && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
     const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
-
-    let width: number;
-    let height: number;
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    let width = 0;
+    let height = 0;
     let time = 0;
+    let accentColor = '#00ff00';
+    let rafId = 0;
+    let resizeTimeout: number;
+
+    const layers = [
+      { // back
+        amplitude: 90, frequency: 0.011, speed: 0.018,
+        phase: 0, alpha: 0.25, lineWidth: 1,
+      },
+      { // mid
+        amplitude: 80, frequency: 0.015, speed: 0.04,
+        phase: 2.1, alpha: 0.5, lineWidth: 1.5,
+      },
+      { // front
+        amplitude: 40, frequency: 0.022, speed: 0.065,
+        phase: 4.4, alpha: 1, lineWidth: 1.25,
+      },
+    ];
+
+    const pointSpacing = 6;
+
+    function updateColor() {
+      const rootStyles = getComputedStyle(document.documentElement);
+      accentColor = rootStyles.getPropertyValue('--accent-color').trim() || '#00ff00';
+    }
+
+    document.addEventListener('themechange', updateColor);
 
     function resize() {
       width = window.innerWidth;
       height = window.innerHeight;
-      canvas.width = width;
-      canvas.height = height;
+      canvas.width = width * dpr;
+      canvas.height = height * dpr;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      updateColor();
     }
 
-    window.addEventListener('resize', resize);
+    function onResize() {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = window.setTimeout(resize, 150);
+    }
+
+    window.addEventListener('resize', onResize);
     resize();
+
+    function drawLayer(layer: typeof layers[number]) {
+      const centerY = height / 2;
+      const points: { x: number; y: number }[] = [];
+
+      for (let x = 0; x <= width; x += pointSpacing) {
+        const centerDist = Math.abs(x - width / 2);
+        const taper = Math.max(0, 1 - centerDist / (width / 3));
+        const carrierWave = Math.sin(x * layer.frequency + time * layer.speed + layer.phase) * layer.amplitude * taper;
+        const modWave = Math.cos(x * layer.frequency * 3 - time * layer.speed * 1.5) * (layer.amplitude * 0.2 * taper);
+        const signalNoise = (Math.random() - 0.5) * 3 * taper;
+        points.push({ x, y: centerY + carrierWave + modWave + signalNoise });
+      }
+
+      if (points.length < 3) return;
+
+      ctx.beginPath();
+      ctx.lineWidth = layer.lineWidth;
+      ctx.strokeStyle = accentColor;
+      ctx.globalAlpha = layer.alpha;
+
+      ctx.moveTo(points[0].x, points[0].y);
+      for (let i = 1; i < points.length - 1; i++) {
+        const xc = (points[i].x + points[i + 1].x) / 2;
+        const yc = (points[i].y + points[i + 1].y) / 2;
+        ctx.quadraticCurveTo(points[i].x, points[i].y, xc, yc);
+      }
+
+      const last = points[points.length - 1];
+      ctx.lineTo(last.x, last.y);
+
+      ctx.stroke();
+    }
 
     function draw() {
       ctx.clearRect(0, 0, width, height);
-
-      const rootStyles = getComputedStyle(document.documentElement);
-      const accentColor = rootStyles.getPropertyValue('--accent-color').trim() || '#00ff00';
-
-      const centerY = height / 2;
-
-      ctx.beginPath();
-      ctx.lineWidth = 1.5;
-      ctx.strokeStyle = accentColor;
-      
-      ctx.shadowBlur = 8;
-      ctx.shadowColor = accentColor;
-
-      for (let x = 0; x < width; x++) {
-        const centerDist = Math.abs(x - width / 2);
-        const taper = Math.max(0, 1 - centerDist / (width / 3)); 
-
-        const frequency = 0.015;
-        const amplitude = 80 * taper; 
-        
-        const carrierWave = Math.sin(x * frequency + time) * amplitude;
-        const modWave = Math.cos(x * frequency * 3 - time * 1.5) * (amplitude * 0.2);
-        const signalNoise = (Math.random() - 0.5) * 4 * taper; 
-        
-        const y = centerY + carrierWave + modWave + signalNoise;
-
-        if (x === 0) {
-          ctx.moveTo(x, y);
-        } else {
-          ctx.lineTo(x, y);
-        }
-      }
-
-      ctx.stroke();
-
-      ctx.shadowBlur = 0;
-      time += 0.04; 
-
-      requestAnimationFrame(draw);
+      for (const layer of layers) drawLayer(layer);
+      ctx.globalAlpha = 1;
+      time += 1;
+      rafId = requestAnimationFrame(draw);
     }
 
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) {
+        cancelAnimationFrame(rafId);
+      } else {
+        rafId = requestAnimationFrame(draw);
+      }
+    });
+
     draw();
-  });
+  }
 </script>
