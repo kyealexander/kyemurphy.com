@@ -15,7 +15,7 @@
 <script>
   const canvas = document.getElementById('ew-canvas') as HTMLCanvasElement;
 
-  if (canvas && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+  if (canvas) {
     const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
     let width = 0;
