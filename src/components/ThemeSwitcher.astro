@@ -8,11 +8,31 @@
 
 <script>
   const themes = [
-    { name: "sakura", color: "#ff3864" },
-    { name: "arcade", color: "#41ff9a" },
-    { name: "electric", color: "#38bdf8" },
-    { name: "violet", color: "#c084fc" },
-    { name: "lantern", color: "#ffbd2e" },
+    {
+      name: "sakura",
+      dark: "#ff3864",
+      light: "#e11d48",
+    },
+    {
+      name: "arcade",
+      dark: "#41ff9a",
+      light: "#059669",
+    },
+    {
+      name: "electric",
+      dark: "#38bdf8",
+      light: "#0284c7",
+    },
+    {
+      name: "violet",
+      dark: "#c084fc",
+      light: "#9333ea",
+    },
+    {
+      name: "lantern",
+      dark: "#ffbd2e",
+      light: "#d97706",
+    },
   ];
 
   const root = document.documentElement;
@@ -31,14 +51,26 @@
   function applyTheme() {
     const theme = themes[currentIndex];
 
-    root.style.setProperty("--accent-color", theme.color);
+    const mode =
+      root.dataset.mode === "light"
+        ? "light"
+        : "dark";
+
+    const color = theme[mode];
+
+    root.style.setProperty("--accent-color", color);
 
     if (button) {
       button.textContent = `[ theme: ${theme.name} ]`;
     }
 
     localStorage.setItem("theme", theme.name);
-    document.dispatchEvent(new CustomEvent("themechange", { detail: theme.color }));
+
+    document.dispatchEvent(
+      new CustomEvent("themechange", {
+        detail: color,
+      })
+    );
   }
 
   function cycleTheme() {
@@ -64,4 +96,6 @@
       cycleTheme();
     }
   });
+
+  document.addEventListener("modechange", applyTheme);
 </script>

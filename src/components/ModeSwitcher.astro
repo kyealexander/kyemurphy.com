@@ -1,0 +1,63 @@
+<button
+  class="mode-switcher"
+  id="mode-switcher"
+  type="button"
+>
+  [ mode: dark ]
+</button>
+
+<script>
+  const root = document.documentElement;
+  const button = document.querySelector("#mode-switcher");
+
+  const savedMode = localStorage.getItem("mode") ?? "dark";
+
+  function applyMode(mode: string) {
+    root.dataset.mode = mode;
+
+    if (button) {
+      button.textContent = `[ mode: ${mode} ]`;
+    }
+
+    localStorage.setItem("mode", mode);
+
+    document.dispatchEvent(
+      new CustomEvent("modechange", {
+        detail: mode,
+      })
+    );
+  }
+
+  function toggleMode() {
+    const currentMode =
+      root.dataset.mode === "light"
+        ? "light"
+        : "dark";
+
+    const nextMode =
+      currentMode === "dark"
+        ? "light"
+        : "dark";
+
+    applyMode(nextMode);
+  }
+
+  applyMode(savedMode);
+
+  button?.addEventListener("click", toggleMode);
+
+  document.addEventListener("keydown", (event) => {
+    const target = event.target;
+
+    if (
+        target instanceof HTMLInputElement ||
+        target instanceof HTMLTextAreaElement
+    ) {
+        return;
+    }
+
+    if (event.key.toLowerCase() === "m") {
+        toggleMode();
+    }
+    });
+</script>
