@@ -3,7 +3,12 @@
   id="mode-switcher"
   type="button"
 >
-  [ mode: dark ]
+  <span id="mode-label" class="control-label-full">
+    [ mode: dark ]
+  </span>
+  <span class="control-label-mobile">
+    [ mode ]
+  </span>
 </button>
 
 <script>
@@ -15,8 +20,10 @@
   function applyMode(mode: string) {
     root.dataset.mode = mode;
 
-    if (button) {
-      button.textContent = `[ mode: ${mode} ]`;
+    const label = document.querySelector("#mode-label");
+
+    if (label) {
+      label.textContent = `[ mode: ${mode} ]`;
     }
 
     localStorage.setItem("mode", mode);

@@ -3,7 +3,12 @@
   id="theme-switcher"
   type="button"
 >
-  [ theme: sakura ]
+  <span id="theme-label" class="control-label-full">
+    [ theme: sakura ]
+  </span>
+  <span class="control-label-mobile">
+    [ theme ]
+  </span>
 </button>
 
 <script>
@@ -60,10 +65,12 @@
 
     root.style.setProperty("--accent-color", color);
 
-    if (button) {
-      button.textContent = `[ theme: ${theme.name} ]`;
-    }
+    const label = document.querySelector("#theme-label");
 
+    if (label) {
+      label.textContent = `[ theme: ${theme.name} ]`;
+    }
+    
     localStorage.setItem("theme", theme.name);
 
     document.dispatchEvent(
