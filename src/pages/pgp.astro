@@ -1,0 +1,68 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import ThemeSwitcher from "../components/ThemeSwitcher.astro";
+import ModeSwitcher from "../components/ModeSwitcher.astro";
+import SiteStatus from "../components/SiteStatus.astro";
+---
+
+<BaseLayout
+  title="PGP | Kye Murphy"
+  description="OpenPGP public key for Kye Murphy"
+>
+  <main class="container pgp-page">
+    <header>
+      <p class="prompt">~ $ gpg --fingerprint</p>
+
+      <h1>PGP</h1>
+
+      <p class="pgp-intro">
+        My public OpenPGP key for signature verification and secure
+        communication.
+      </p>
+    </header>
+
+    <section class="pgp-key">
+      <p class="pgp-label">fingerprint</p>
+
+      <code class="fingerprint">
+        XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX
+      </code>
+
+      <div class="pgp-details">
+        <p>
+          <span>key</span>
+          RSA 4096
+        </p>
+
+        <p>
+          <span>key id</span>
+          XXXXXXXXXXXXXXXX
+        </p>
+
+        <p>
+          <span>email</span>
+          kye@kyemurphy.com
+        </p>
+      </div>
+
+      <nav class="links pgp-links">
+        <!--
+        <a href="/gpg.asc">
+          Download public key
+        </a>
+        -->
+
+        <a href="/">
+          return
+        </a>
+      </nav>
+    </section>
+  </main>
+
+  <SiteStatus />
+
+  <div class="display-controls">
+    <ThemeSwitcher />
+    <ModeSwitcher />
+  </div>
+</BaseLayout>

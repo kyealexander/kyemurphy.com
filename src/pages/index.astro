@@ -23,32 +23,24 @@ import SiteStatus from "../components/SiteStatus.astro";
       </div>
     </header>
 
-    <nav class="links" aria-label="Social links">
-      <a
-        href="https://linkedin.com/in/kyemurphy"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        LinkedIn
-      </a>
+    <nav class="link-grid" aria-label="Links">
+      <div class="links">
+        <a href="https://linkedin.com/in/kyemurphy">LinkedIn</a>
+        <a href="https://github.com/kyealexander">GitHub</a>
+        <a href="mailto:kye@kyemurphy.com">Email</a>
+      </div>
 
-      <a
-        href="https://github.com/kyealexander"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        GitHub
-      </a>
-
-      <a href="mailto:kye@kyemurphy.com">
-        Email
-      </a>
+      <div class="links secondary-links">
+        <a href="/pgp">PGP</a>
+      </div>
     </nav>
   </main>
 
   <SiteStatus />
+  
   <div class="display-controls">
     <ThemeSwitcher />
     <ModeSwitcher />
   </div>
+
 </BaseLayout>
