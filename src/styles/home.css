@@ -1,0 +1,61 @@
+.info {
+    color: var(--link-color);
+
+    font-size: 0.9rem;
+    line-height: 1.7;
+
+    margin-bottom: 3.5rem;
+}
+
+.info p {
+    display: flex;
+    gap: 1.5rem;
+}
+
+.info span {
+    color: var(--text-main);
+    min-width: 5rem;
+}
+
+.links {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+}
+
+.links a {
+    position: relative;
+
+    width: fit-content;
+
+    color: var(--link-color);
+
+    font-size: 1.1rem;
+    text-decoration: none;
+
+    transition: color 0.2s ease;
+}
+
+.links a::before {
+    content: ">> ";
+
+    display: inline-block;
+
+    color: var(--accent-color);
+
+    opacity: 0;
+    transform: translateX(-10px);
+
+    transition:
+        opacity 0.2s ease,
+        transform 0.2s ease;
+}
+
+.links a:hover {
+    color: var(--link-hover);
+}
+
+.links a:hover::before {
+    opacity: 1;
+    transform: translateX(0);
+}

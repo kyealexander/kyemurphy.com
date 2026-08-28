@@ -1,0 +1,62 @@
+/* Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    font-family: "JetBrains Mono Variable", monospace;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    min-height: 100vh;
+}
+
+.container {
+    width: 100%;
+    max-width: 650px;
+    padding: 2rem;
+}
+
+.prompt {
+    color: var(--accent-color);
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+}
+
+h1 {
+    color: var(--title-color);
+
+    font-size: 3.5rem;
+    font-weight: 700;
+    letter-spacing: -0.05em;
+
+    margin-bottom: 0.5rem;
+}
+
+h2 {
+    display: inline-block;
+
+    color: var(--accent-color);
+
+    font-size: 1.1rem;
+    font-weight: 400;
+
+    margin-bottom: 1.5rem;
+    padding-right: 5px;
+
+    border-right: 2px solid var(--accent-color);
+
+    animation: blink 1s step-end infinite;
+}
+
+@keyframes blink {
+    50% {
+        border-color: transparent;
+    }
+}
